@@ -18,33 +18,38 @@
         </div>
       </el-col>
       <el-col>
-        <Orderlist :orderlist="data.orderlist"></Orderlist>
+        <Orderlist @openedit="openedit" :orderlist="data.orderlist"></Orderlist>
       </el-col>
     </el-row>
+
   </div>
 </template>
 
 <script setup>
 import { reactive } from "@vue/reactivity";
-import orders from '../services/api/orders/orders'
-import Orderlist from "../components/order/OrderList.vue"
+import orders from "../services/api/orders/orders";
+import Orderlist from "../components/order/OrderList.vue";
 import { onMounted } from "@vue/runtime-core";
 const data = reactive({
   selectuser: "",
-  tableData:[],
-  orderlist:[{product_name:'nihao'}]
+  tableData: [],
+  orderlist: [],
+  drawer:false,
+  orderdetail:null,
 });
-onMounted(()=>{
-  getorderslist()
-})
-const getorderslist=async ()=>{
-  const result =await orders.getorders();
-  console.log(result)
-  //data.orderlist
+onMounted(() => {
+ getorderslist(); 
+});
+const openedit=(opt)=>{
+  data.drawer=opt.drawer;
+  data.orderdetail=opt.order;
 }
+const getorderslist = async () => {
+  const result = await orders.getorders();
+  data.orderlist=result.result;
+};
 const getuserlist = () => {};
 const seluser = () => {};
-
 </script>
 
 <style lang="less" scoped>
